@@ -18,7 +18,7 @@
 
         .table-container {
             background-color: rgba(255, 255, 255, .8); /* White background with transparency */
-            padding: 20px 20px 50px 20px;
+            padding: 20px;
             border-radius: 10px;
             margin-top: 50px;
         }
@@ -40,7 +40,9 @@
 
         <div class="container table-container">
             <h2>Stored Client Information</h2>
-
+            <hr>
+            <a href="{{ route('companies.clients') }}" class="btn btn-primary">Back</a>
+            <a href="{{ route('clients.add') }}" class="btn btn-success mb-3" style="margin-right: 15px;">Add New Client</a>
             <table class="table table-striped table-bordered">
                 <thead class="table-dark">
                     <tr>
@@ -48,6 +50,7 @@
                         <th>Age</th>
                         <th>Address</th>
                         <th>Sex</th>
+                        <th>Option</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,8 +61,8 @@
                         <td>{{ $client->address }}</td>
                         <td>{{ $client->sex }}</td>
                         <td>
-                            <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('clients.destroy', $client->id) }}" method="POST" style="display:inline-block;">
+                            <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-warning" >Edit</a>
+                            <form action="{{ route('clients.delete', $client->id) }}" method="POST" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -69,10 +72,13 @@
                     @endforeach
                 </tbody>
             </table>
-            <a href="{{ route('company.clients') }}" class="btn btn-primary">Back</a>
         </div>
 
-
+        <script>
+            function confirmDelete() {
+                return confirm("Are you sure you want to delete?");
+            }
+            </script>
 </body>
 </html>
 
