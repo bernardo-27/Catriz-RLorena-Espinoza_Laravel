@@ -36,20 +36,8 @@
     @section('content')
     <div class="container mt-5">
 
-
-        <!-- Display validation errors, if any -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <!-- Form for adding a new client -->
-        <form action="{{ route('clients.store') }}" method="POST">
+        <form action="{{ route('clients.store') }}" method="POST" class="mb-3">
             <h2 class="mb-4">Add New Client</h2>
             <hr>
             @csrf
@@ -78,11 +66,28 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">Save Client</button>
+            <button type="submit" class="btn btn-primary">Add Client</button>
             <a href="{{ route('companies.infos') }}" class="btn btn-secondary ms-2">Back</a>
         </form>
-    </div>
 
+
+        <!-- Display validation errors, if any -->
+        @if ($errors->any())
+        <div id="errorAlert" class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#errorAlert").delay(2000).fadeOut(1000);
+        });
+    </script>
 
 </body>
 </html>

@@ -60,12 +60,9 @@
                     <option value="Female" {{ $clients->sex == 'Female' ? 'selected' : '' }}>Female</option>
                 </select>
             </div>
-
-            <button type="submit" class="btn btn-primary">Update Client</button>
-            <a href="{{ route('companies.infos') }}" class="btn btn-secondary ms-2">Back</a>
-        </form>
+            <a href="{{ route('companies.infos') }}" class="btn btn-secondary ms-2">Back</a>  
+            <button type="submit" class="btn btn-primary" id="confirmEdit">Update Client</button>
+        </form> 
     </div>
-
-
 </body>
 </html>

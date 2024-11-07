@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clients;
 use Illuminate\Http\Request;
 
+
 class controllerClients extends Controller
 {
 
@@ -16,8 +17,9 @@ class controllerClients extends Controller
         $clients = Clients::all();
 
         // Pass the data to the view
-        return view('companies.clients', compact('clients'));
+        return view('companies.clients', ['clients' => $clients]);;
     }
+
     public function store(Request $request)
     {
         // Validate the incoming data
@@ -35,17 +37,48 @@ class controllerClients extends Controller
         return redirect()->route('companies.clients')->with('success', 'Client information saved successfully!');
     }
 
-        // Add the missing showClients method
-        
-        public function infos()
+
+        public function infos(Request $request)
         {
-            // Retrieve all clients
-            $clients = Clients::all();
-            // Return view with clients data
-            return view('companies.infos', compact('clients'));
+            // Check the request for sort order, default to ascending if not specified
+            $sortOrder = $request->input('sort', 'asc');
+
+            // Get the search term from the request
+            $searchTerm = $request->input('search');
+
+            // Determine which page to display, default to 1 if no page parameter is provided
+            $page = $request->input('page', 1);
+            $recordsPerPage = 25;
+            $offset = ($page - 1) * $recordsPerPage;
+
+            // Retrieve clients, apply sorting, filtering, and limit the results to 20 per page
+            $clientsQuery = clients::when($searchTerm, function ($query, $searchTerm) {
+                return $query->where('name', 'like', '%' . $searchTerm . '%')
+                                ->orWhere('address', 'like', '%' . $searchTerm . '%');
+            });
+
+            // get the total clients
+            $totalClients = $clientsQuery->count();
+
+            // Get the Clients for the current page
+            $clients = $clientsQuery->orderBy('name', $sortOrder)
+                                    ->skip($offset)
+                                    ->take($recordsPerPage)
+                                    ->get();
+
+            // Return view with clients data, search term, page, and records per page
+            return view('companies.infos', [
+                'clients' => $clients,
+                'searchTerm' => $searchTerm,
+                'page' => $page,
+                'recordsPerPage' => $recordsPerPage,
+                'totalClients' => $totalClients, //counts total clients
+            ]);
         }
 
-        
+
+
+
         // Adding Clients
         // Using the function add and stores, to direct the page in the companies.infos after adding another clients
         public function add()
@@ -72,9 +105,10 @@ class controllerClients extends Controller
 
         // Edit Clients
 
-        public function edit($id) {
-            $clients = Clients::find($id);
-            return view('companies.edit', compact('clients'));
+public function edit($id) {
+    $clients = Clients::findOrFail($id);
+    return view('companies.edit', ['clients' => $clients]);
+
         }
 
         // Update Clients

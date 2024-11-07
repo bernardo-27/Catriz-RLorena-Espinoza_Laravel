@@ -14,5 +14,4 @@ class Clients extends Model
         'address',
         'sex'
     ];
-
 }
