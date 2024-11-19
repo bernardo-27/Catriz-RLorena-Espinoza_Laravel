@@ -38,6 +38,8 @@ class controllerClients extends Controller
     }
 
 
+
+
         public function infos(Request $request)
         {
             // Check the request for sort order, default to ascending if not specified
@@ -51,7 +53,7 @@ class controllerClients extends Controller
             $recordsPerPage = 25;
             $offset = ($page - 1) * $recordsPerPage;
 
-            // Retrieve clients, apply sorting, filtering, and limit the results to 20 per page
+            // Retrieve clients, apply sorting, filtering, and limit the results to 25 per page
             $clientsQuery = clients::when($searchTerm, function ($query, $searchTerm) {
                 return $query->where('name', 'like', '%' . $searchTerm . '%')
                                 ->orWhere('address', 'like', '%' . $searchTerm . '%');
